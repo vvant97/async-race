@@ -1,22 +1,19 @@
-import { CarData, CarDataFull } from './types';
-import { HttpMethods, Paths, QueryKeys } from './enums';
+import { CarData, CarFullData, QueryParams } from './types';
+import { HttpMethods, Paths } from './enums';
 import { ORIGIN } from './constants';
 import generateQueryString from './utils';
 
-async function getCars(limit: number = -1, page: number = -1): Promise<CarDataFull[]> {
-  const params = generateQueryString([
-    [QueryKeys.LIMIT, limit],
-    [QueryKeys.PAGE, page],
-  ]);
-  const res = await fetch(`${ORIGIN}${Paths.GARAGE}${params}`);
-  const cars: CarDataFull[] = await res.json();
+async function getCars(params: QueryParams = {}): Promise<CarFullData[]> {
+  const queryString = generateQueryString(params);
+  const res = await fetch(`${ORIGIN}${Paths.GARAGE}${queryString}`);
+  const cars: CarFullData[] = await res.json();
 
   return cars;
 }
 
-async function getCar(id: number): Promise<CarDataFull> {
+async function getCar(id: number): Promise<CarFullData> {
   const res = await fetch(`${ORIGIN}${Paths.GARAGE}/${id}`);
-  const car: CarDataFull = await res.json();
+  const car: CarFullData = await res.json();
 
   return car;
 }

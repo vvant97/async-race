@@ -13,6 +13,8 @@ enum Paths {
 enum QueryKeys {
   LIMIT = '_limit',
   PAGE = '_page',
+  SORT = '_sort',
+  ORDER = '_order',
 }
 
 export {
