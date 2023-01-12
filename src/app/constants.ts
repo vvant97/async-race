@@ -1,0 +1,9 @@
+const ORIGIN = 'http://127.0.0.1:3000';
+const DEFAULT_CAR_COLOR = '#2b2b2b';
+const QUERY_PARAM_MIN_VALUE = 0;
+
+export {
+  ORIGIN,
+  DEFAULT_CAR_COLOR,
+  QUERY_PARAM_MIN_VALUE,
+};
