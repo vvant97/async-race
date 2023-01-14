@@ -1,19 +1,19 @@
 import { CarData, CarFullData, QueryParams } from '../utils/types';
-import { HttpMethods, Paths } from '../utils/enums';
+import { HttpMethods, Paths, ContentTypes } from '../utils/enums';
 import { ORIGIN } from '../utils/constants';
 import generateQueryString from '../utils/utils';
 
 async function getCars(params: QueryParams = {}): Promise<CarFullData[] | []> {
   const queryString = generateQueryString(params);
   const res = await fetch(`${ORIGIN}${Paths.GARAGE}${queryString}`);
-  const cars: CarFullData[] = await res.json();
+  const cars: CarFullData[] | [] = await res.json();
 
   return cars;
 }
 
 async function getCar(id: number): Promise<CarFullData | {}> {
   const res = await fetch(`${ORIGIN}${Paths.GARAGE}/${id}`);
-  const car: CarFullData = await res.json();
+  const car: CarFullData | {} = await res.json();
 
   return car;
 }
@@ -22,7 +22,7 @@ async function createCar(body: CarData): Promise<Response> {
   const res = await fetch(`${ORIGIN}${Paths.GARAGE}`, {
     method: HttpMethods.POST,
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': ContentTypes.JSON,
     },
     body: JSON.stringify(body),
   });
@@ -42,7 +42,7 @@ async function updateCar(id: number, body: CarData): Promise<Response> {
   const res = await fetch(`${ORIGIN}${Paths.GARAGE}/${id}`, {
     method: HttpMethods.PUT,
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': ContentTypes.JSON,
     },
     body: JSON.stringify(body),
   });

@@ -8,6 +8,7 @@ enum HttpMethods {
 
 enum Paths {
   GARAGE = '/garage',
+  WINNERS = '/winners',
 }
 
 enum QueryKeys {
@@ -17,8 +18,13 @@ enum QueryKeys {
   ORDER = '_order',
 }
 
+enum ContentTypes {
+  JSON = 'application/json',
+}
+
 export {
   HttpMethods,
   Paths,
   QueryKeys,
+  ContentTypes,
 };
