@@ -19,7 +19,7 @@ async function getCar(id: number): Promise<CarFullData | {}> {
 }
 
 async function createCar(body: CarData): Promise<Response> {
-  const res = fetch(`${ORIGIN}${Paths.GARAGE}`, {
+  const res = await fetch(`${ORIGIN}${Paths.GARAGE}`, {
     method: HttpMethods.POST,
     headers: {
       'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ async function createCar(body: CarData): Promise<Response> {
 }
 
 async function deleteCar(id: number): Promise<Response> {
-  const res = fetch(`${ORIGIN}${Paths.GARAGE}/${id}`, {
+  const res = await fetch(`${ORIGIN}${Paths.GARAGE}/${id}`, {
     method: HttpMethods.DELETE,
   });
 
@@ -39,7 +39,7 @@ async function deleteCar(id: number): Promise<Response> {
 }
 
 async function updateCar(id: number, body: CarData): Promise<Response> {
-  const res = fetch(`${ORIGIN}${Paths.GARAGE}/${id}`, {
+  const res = await fetch(`${ORIGIN}${Paths.GARAGE}/${id}`, {
     method: HttpMethods.PUT,
     headers: {
       'Content-Type': 'application/json',
