@@ -10,3 +10,141 @@
 html {
   font-size: 10px;
 }
+
+ul {
+  list-style: none;
+}
+
+.container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 30px;
+}
+
+.page-title {
+  margin-bottom: 10px;
+}
+
+.header {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 50px;
+}
+
+.button {
+  width: 105px;
+  padding: 5px 10px;
+}
+
+.garage {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+
+  &.hidden {
+    display: none;
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__create,
+  &__update {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__car-name,
+  &__car-color {
+    height: 30px;
+  }
+
+  &__car-name {
+    padding: 0 8px;
+  }
+
+  &__cars-controls {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  &__generate {
+    width: auto;
+  }
+}
+
+.cars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 40px;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__state {
+    display: flex;
+    gap: 10px;
+  }
+
+  &__car-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__page-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 40px;
+  }
+
+  &__track {
+    position: relative;
+
+    &:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #000000;
+    }
+  }
+}
+
+.winners {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &.hidden {
+    display: none;
+  }
+
+  &__table {
+    width: 500px;
+    text-align: left;
+  }
+}

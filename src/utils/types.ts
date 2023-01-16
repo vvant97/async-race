@@ -29,6 +29,13 @@ interface QueryParams {
   [QueryKeys.ORDER]?: WinnersOrder;
 }
 
+interface PageTemplate {
+  carsAmount: number;
+  winnersAmount: number;
+  carsList: string;
+  estimatedCarsPages: number;
+}
+
 export {
   CarData,
   CarFullData,
@@ -38,4 +45,5 @@ export {
   WinnersSort,
   WinnersOrder,
   ParamValue,
+  PageTemplate,
 };

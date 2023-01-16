@@ -1,7 +1,7 @@
 import { CarData, CarFullData, QueryParams } from '../utils/types';
 import { HttpMethods, Paths, ContentTypes } from '../utils/enums';
 import { ORIGIN } from '../utils/constants';
-import generateQueryString from '../utils/utils';
+import { generateQueryString } from '../utils/utils';
 
 async function getCars(params: QueryParams = {}): Promise<CarFullData[] | []> {
   const queryString = generateQueryString(params);
@@ -18,7 +18,7 @@ async function getCar(id: number): Promise<CarFullData | {}> {
   return car;
 }
 
-async function createCar(body: CarData): Promise<Response> {
+async function createCar(body: CarData): Promise<CarFullData> {
   const res = await fetch(`${ORIGIN}${Paths.GARAGE}`, {
     method: HttpMethods.POST,
     headers: {
@@ -26,8 +26,9 @@ async function createCar(body: CarData): Promise<Response> {
     },
     body: JSON.stringify(body),
   });
+  const car: CarFullData = await res.json();
 
-  return res;
+  return car;
 }
 
 async function deleteCar(id: number): Promise<Response> {
@@ -38,7 +39,7 @@ async function deleteCar(id: number): Promise<Response> {
   return res;
 }
 
-async function updateCar(id: number, body: CarData): Promise<Response> {
+async function updateCar(id: number, body: CarData): Promise<CarFullData> {
   const res = await fetch(`${ORIGIN}${Paths.GARAGE}/${id}`, {
     method: HttpMethods.PUT,
     headers: {
@@ -46,8 +47,9 @@ async function updateCar(id: number, body: CarData): Promise<Response> {
     },
     body: JSON.stringify(body),
   });
+  const car: CarFullData = await res.json();
 
-  return res;
+  return car;
 }
 
 export {

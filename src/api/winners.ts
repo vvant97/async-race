@@ -1,7 +1,7 @@
 import { WinnerData, WinnerFullData, QueryParams } from '../utils/types';
 import { HttpMethods, Paths, ContentTypes } from '../utils/enums';
 import { ORIGIN } from '../utils/constants';
-import generateQueryString from '../utils/utils';
+import { generateQueryString } from '../utils/utils';
 
 async function getWinners(params: QueryParams = {}): Promise<WinnerFullData[] | []> {
   const queryString = generateQueryString(params);
