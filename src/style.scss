@@ -23,6 +23,7 @@ ul {
 
 .page-title {
   margin-bottom: 10px;
+  font-size: 3rem;
 }
 
 .header {
@@ -32,8 +33,34 @@ ul {
 }
 
 .button {
-  width: 105px;
   padding: 5px 10px;
+  cursor: pointer;
+  width: auto;
+  background: none;
+  border: none;
+  box-shadow: 5px 5px 5px #e2e2e2;
+  color: #000000;
+  font-weight: 300;
+  font-size: 1.2rem;
+  transition: transform 0.3s;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &:disabled {
+    cursor: default;
+    background: #eaeaea;
+
+    &:hover {
+      transform: scale(1);
+    }
+  }
+}
+
+.car {
+  position: relative;
+  top: 11px;
 }
 
 .garage {
@@ -61,6 +88,13 @@ ul {
   &__car-name,
   &__car-color {
     height: 30px;
+    border: 1px solid #e6e6e6;
+    outline: none;
+    font-weight: 500;
+
+    &:disabled {
+      background: #eaeaea;
+    }
   }
 
   &__car-name {
@@ -109,8 +143,9 @@ ul {
 
   &__car-container {
     display: flex;
-    flex-direction: column;
+    align-items: flex-start;
     gap: 10px;
+    padding: 0 0 5px;
   }
 
   &__page-controls {
@@ -129,8 +164,57 @@ ul {
       left: 0;
       width: 100%;
       height: 2px;
-      background-color: #000000;
+      background-color: #838383;
     }
+  }
+
+  &__remove {
+    padding: 0 3px;
+    background: none;
+    border: none;
+    color: #ff3d3d;
+    box-shadow: none;
+
+    &:hover {
+      text-decoration: underline;
+      box-shadow: none;
+    }
+  }
+
+  &__select {
+    padding: 0 3px;
+    background: none;
+    border: none;
+    color: #008fff;
+    box-shadow: none;
+
+    &:hover {
+      text-decoration: underline;
+      box-shadow: none;
+    }
+  }
+
+  &__car-name {
+    font-size: 1.4rem;
+    font-weight: 500;
+  }
+
+  &__title {
+    font-size: 2rem;
+  }
+
+  &__amount {
+    padding-left: 5px;
+    color: #008fff;
+  }
+
+  &__subtitle {
+    font-size: 1.6rem;
+  }
+
+  &__page {
+    padding-left: 5px;
+    color: #008fff;
   }
 }
 
