@@ -9,7 +9,12 @@ import createCarTemplate from '../components/carTemplate';
 import { CARS_AMOUNT_PER_PAGE } from '../utils/constants';
 import { QueryKeys } from '../utils/enums';
 import { CarFullData } from '../utils/types';
-import { getRandomCarName, getRandomColor } from '../utils/utils';
+import {
+  activateProloaderOnElement,
+  deactivateProloaderOnElement,
+  getRandomCarName,
+  getRandomColor,
+} from '../utils/utils';
 
 async function setGarageCarsAmount() {
   const carsAmount = document.querySelector('.cars__amount') as HTMLElement;
@@ -36,13 +41,10 @@ async function createCarsInitContainer(): Promise<string> {
   return carsContainer;
 }
 
-async function appendCarToCarsList(event: Event) {
-  const createCarButton = event.target as HTMLButtonElement;
+async function appendCarToCarsList() {
   const carsList = document.querySelector('.cars__list') as HTMLElement;
   const carName = document.querySelector('.garage__car-name-create') as HTMLInputElement;
   const carColor = document.querySelector('.garage__car-color-create') as HTMLInputElement;
-
-  createCarButton.disabled = true;
 
   const car = await createCar({
     name: carName.value,
@@ -60,7 +62,6 @@ async function appendCarToCarsList(event: Event) {
 
   carName.value = '';
   carColor.value = '#000000';
-  createCarButton.disabled = false;
 }
 
 async function removeCarFromCarsList(event: Event) {
@@ -206,11 +207,7 @@ async function changeCarsPage(event: Event) {
   allPagesContainer.textContent = estimatedPages.toString();
 }
 
-async function createOneHundredRandomCars(event: Event) {
-  const creationButton = event.target as HTMLButtonElement;
-
-  creationButton.disabled = true;
-
+async function createOneHundredRandomCars() {
   const carsList = document.querySelector('.cars__list') as HTMLElement;
   const cars = [];
 
@@ -237,7 +234,6 @@ async function createOneHundredRandomCars(event: Event) {
     });
 
     carsTemplates += carTemplate;
-    creationButton.disabled = false;
   });
 
   carsList.insertAdjacentHTML('beforeend', carsTemplates);
@@ -248,20 +244,24 @@ function listenCarManageEvents() {
     const target = event.target as HTMLElement;
 
     if (target.matches('.garage__submit-create')) {
-      await appendCarToCarsList(event);
+      await activateProloaderOnElement(event.target as HTMLButtonElement);
+      await appendCarToCarsList();
       await changeCarsPage(event);
       await renderCurrentCarsPage();
+      await deactivateProloaderOnElement(event.target as HTMLButtonElement);
     }
 
     if (target.matches('.cars__remove')) {
+      await activateProloaderOnElement(event.target as HTMLButtonElement);
       await changeCarsPage(event);
       await removeCarFromCarsList(event);
       await renderCurrentCarsPage();
       await changeCarsPage(event);
+      await deactivateProloaderOnElement(event.target as HTMLButtonElement);
     }
 
     if (target.matches('.cars__select')) {
-      await activateCarUpdatingElements(event);
+      activateCarUpdatingElements(event);
     }
 
     if (target.matches('.garage__submit-update')) {
@@ -275,10 +275,12 @@ function listenCarManageEvents() {
     }
 
     if (target.matches('.garage__generate')) {
-      await createOneHundredRandomCars(event);
+      await activateProloaderOnElement(event.target as HTMLButtonElement);
+      await createOneHundredRandomCars();
       await changeCarsPage(event);
       await renderCurrentCarsPage();
       await setGarageCarsAmount();
+      await deactivateProloaderOnElement(event.target as HTMLButtonElement);
     }
   });
 }

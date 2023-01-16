@@ -61,8 +61,37 @@ function getRandomColor(): string {
   return color;
 }
 
+async function activateProloaderOnElement(htmlElement: HTMLButtonElement | HTMLInputElement) {
+  const element = htmlElement;
+  const preloaderTemplate = `
+    <div class="preloader">
+      <div class="preloader-ring">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  `;
+
+  element.style.position = 'relative';
+  element.disabled = true;
+  element.insertAdjacentHTML('afterbegin', preloaderTemplate);
+}
+
+async function deactivateProloaderOnElement(htmlElement: HTMLButtonElement | HTMLInputElement) {
+  const element = htmlElement;
+  const preloader = element.querySelector('.preloader') as HTMLElement;
+
+  element.style.position = '';
+  element.disabled = false;
+  preloader.remove();
+}
+
 export {
   generateQueryString,
   getRandomCarName,
   getRandomColor,
+  activateProloaderOnElement,
+  deactivateProloaderOnElement,
 };
