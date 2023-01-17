@@ -200,7 +200,8 @@ async function changeCarsPage(event: Event) {
       currentCarsPage -= 1;
       await renderCurrentCarsPage();
     }
-  } else if (button.classList.contains('garage__submit-create') && currentCarsPage === 0) {
+  } else if ((button.classList.contains('garage__submit-create')
+    || button.classList.contains('garage__generate')) && currentCarsPage === 0) {
     currentCarsPage += 1;
   }
 
