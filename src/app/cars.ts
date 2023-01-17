@@ -5,22 +5,19 @@ import {
   getCar,
   updateCar,
 } from '../api/garage';
+
+import { activatePreloaderOnElement, deactivatePreloaderOnElement } from '../utils/utils';
 import createCarTemplate from '../components/carTemplate';
 import { CARS_AMOUNT_PER_PAGE } from '../utils/constants';
 import { QueryKeys } from '../utils/enums';
 import { CarFullData } from '../utils/types';
-import {
-  activatePreloaderOnElement,
-  deactivatePreloaderOnElement,
-  getRandomCarName,
-  getRandomColor,
-} from '../utils/utils';
-import startDrive from './carAnimation';
+import createOneHundredRandomCars from './randomCars';
+
+let currentCarsPage = 1;
 
 async function setGarageCarsAmount() {
   const carsAmount = document.querySelector('.cars__amount') as HTMLElement;
   const cars = await getCars();
-
   carsAmount.textContent = cars.length.toString();
 }
 
@@ -29,53 +26,37 @@ async function createCarsInitContainer(): Promise<string> {
     [QueryKeys.LIMIT]: CARS_AMOUNT_PER_PAGE,
     [QueryKeys.PAGE]: 1,
   });
-  let carsContainer: string = '';
 
-  cars.forEach((car) => {
-    carsContainer += createCarTemplate({
-      name: car.name,
-      color: car.color,
-      id: car.id,
-    });
-  });
-
-  return carsContainer;
+  return cars
+    .map((car) => {
+      const { name, color, id } = car;
+      return createCarTemplate({ name, color, id });
+    })
+    .reduce((template, car) => template + car, '');
 }
 
 async function appendCarToCarsList() {
   const carsList = document.querySelector('.cars__list') as HTMLElement;
-  const carName = document.querySelector('.garage__car-name-create') as HTMLInputElement;
-  const carColor = document.querySelector('.garage__car-color-create') as HTMLInputElement;
+  const carNameInput = document.querySelector('.garage__car-name-create') as HTMLInputElement;
+  const carColorInput = document.querySelector('.garage__car-color-create') as HTMLInputElement;
 
-  const car = await createCar({
-    name: carName.value,
-    color: carColor.value,
-  });
+  const car = await createCar({ name: carNameInput.value, color: carColorInput.value });
+  const { name, color, id } = car;
+  const carTemplate = createCarTemplate({ name, color, id });
 
-  const carTemplate = createCarTemplate({
-    name: car.name,
-    color: car.color,
-    id: car.id,
-  });
-
-  await setGarageCarsAmount();
+  carNameInput.value = '';
+  carColorInput.value = '#000000';
   carsList.insertAdjacentHTML('beforeend', carTemplate);
-
-  carName.value = '';
-  carColor.value = '#000000';
+  await setGarageCarsAmount();
 }
 
 async function removeCarFromCarsList(event: Event) {
   const carToRemove = (event.target as HTMLElement).closest('.cars__item') as HTMLLIElement;
   const carId = +(carToRemove.dataset.carId as string);
-  const response = await deleteCar(carId);
 
-  if (response.ok) {
-    await setGarageCarsAmount();
-    carToRemove.remove();
-  } else {
-    throw new Error('Not found');
-  }
+  await deleteCar(carId);
+  await setGarageCarsAmount();
+  carToRemove.remove();
 }
 
 async function activateCarUpdatingElements(event: Event) {
@@ -93,7 +74,6 @@ async function activateCarUpdatingElements(event: Event) {
 
   carNameInput.value = carData.name;
   carColorInput.value = carData.color;
-
   carUpdateButton.dataset.carId = carId;
 }
 
@@ -105,7 +85,6 @@ function deactivateCarUpdatingElements() {
   carNameInput.disabled = true;
   carColorInput.disabled = true;
   carUpdateButton.disabled = true;
-
   carNameInput.value = '';
   carColorInput.value = '#000000';
 }
@@ -116,10 +95,7 @@ async function updateCarInCarsList() {
   const carUpdateButton = document.querySelector('.garage__submit-update') as HTMLInputElement;
 
   const carId = carUpdateButton.dataset.carId as string;
-  const carData = await updateCar(+carId, {
-    name: carNameInput.value,
-    color: carColorInput.value,
-  });
+  const carData = await updateCar(+carId, { name: carNameInput.value, color: carColorInput.value });
 
   const carToUpdateElement = document.querySelector(`.cars__item[data-car-id="${carId}"]`) as HTMLLIElement;
   const carNameToUpdate = carToUpdateElement.querySelector('.cars__car-name') as HTMLElement;
@@ -131,12 +107,8 @@ async function updateCarInCarsList() {
 
 async function getCarsPagesAmount(): Promise<number> {
   const cars = await getCars();
-  const estimatedPages = Math.ceil(cars.length / CARS_AMOUNT_PER_PAGE);
-
-  return estimatedPages;
+  return Math.ceil(cars.length / CARS_AMOUNT_PER_PAGE);
 }
-
-let currentCarsPage = 1;
 
 async function renderCurrentCarsPage() {
   const carsList = document.querySelector('.cars__list') as HTMLElement;
@@ -145,17 +117,12 @@ async function renderCurrentCarsPage() {
     [QueryKeys.PAGE]: currentCarsPage,
   });
 
-  let newCarsList: string = '';
-
-  cars.forEach((car) => {
-    newCarsList += createCarTemplate({
-      name: car.name,
-      color: car.color,
-      id: car.id,
-    });
-  });
-
-  carsList.innerHTML = newCarsList;
+  carsList.innerHTML = cars
+    .map((car) => {
+      const { name, color, id } = car;
+      return createCarTemplate({ name, color, id });
+    })
+    .reduce((template, car) => template + car, '');
 }
 
 async function changeCartPageButtonsState() {
@@ -163,17 +130,8 @@ async function changeCartPageButtonsState() {
   const prevButton = document.querySelector('.cars__prev') as HTMLButtonElement;
   const nextButton = document.querySelector('.cars__next') as HTMLButtonElement;
 
-  if (currentCarsPage === estimatedPages) {
-    nextButton.disabled = true;
-  } else {
-    nextButton.disabled = false;
-  }
-
-  if (currentCarsPage <= 1) {
-    prevButton.disabled = true;
-  } else {
-    prevButton.disabled = false;
-  }
+  nextButton.disabled = currentCarsPage === estimatedPages;
+  prevButton.disabled = currentCarsPage <= 1;
 }
 
 async function changeCarsPage(event: Event) {
@@ -209,38 +167,6 @@ async function changeCarsPage(event: Event) {
   await changeCartPageButtonsState();
   pageContainer.textContent = currentCarsPage.toString();
   allPagesContainer.textContent = estimatedPages.toString();
-}
-
-async function createOneHundredRandomCars() {
-  const carsList = document.querySelector('.cars__list') as HTMLElement;
-  const cars = [];
-
-  for (let i = 0; i < 100; i += 1) {
-    const carName = getRandomCarName();
-    const carColor = getRandomColor();
-
-    cars.push([carName, carColor]);
-  }
-
-  let carsTemplates = '';
-
-  cars.forEach(async (car) => {
-    const [carName, carColor] = car;
-    const carData = await createCar({
-      name: carName,
-      color: carColor,
-    });
-
-    const carTemplate = createCarTemplate({
-      name: carData.name,
-      color: carData.color,
-      id: carData.id,
-    });
-
-    carsTemplates += carTemplate;
-  });
-
-  carsList.insertAdjacentHTML('beforeend', carsTemplates);
 }
 
 function listenCarManageEvents() {
@@ -289,46 +215,8 @@ function listenCarManageEvents() {
   });
 }
 
-async function getCarElementsData(event: Event) {
-  const target = event.target as HTMLElement;
-  const container = target.closest('.cars__item') as HTMLLIElement;
-  const element = container.querySelector('.car') as HTMLElement;
-  const carId = container.dataset.carId as string;
-  const car = await getCar(+carId) as CarFullData;
-
-  return {
-    element,
-    car,
-  };
-}
-
-function listenCarEngineEvents() {
-  document.addEventListener('click', async (event: Event) => {
-    const target = event.target as HTMLElement;
-
-    if (target.matches('.cars__start')) {
-      const startButton = target as HTMLButtonElement;
-      const stopButton = startButton.nextElementSibling as HTMLButtonElement;
-      await activatePreloaderOnElement(startButton);
-
-      const { element, car } = await getCarElementsData(event);
-      const { id, name, color } = car;
-
-      await startDrive({
-        element,
-        id,
-        name,
-        color,
-        startButton,
-        stopButton,
-      });
-    }
-  });
-}
-
 export {
   createCarsInitContainer,
   listenCarManageEvents,
   getCarsPagesAmount,
-  listenCarEngineEvents,
 };
