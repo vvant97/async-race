@@ -63,7 +63,7 @@ function getRandomColor(): string {
   return color;
 }
 
-async function activateProloaderOnElement(htmlElement: HTMLButtonElement | HTMLInputElement) {
+async function activatePreloaderOnElement(htmlElement: HTMLButtonElement | HTMLInputElement) {
   const element = htmlElement;
   const preloaderTemplate = `
     <div class="preloader">
@@ -81,7 +81,7 @@ async function activateProloaderOnElement(htmlElement: HTMLButtonElement | HTMLI
   element.insertAdjacentHTML('afterbegin', preloaderTemplate);
 }
 
-async function deactivateProloaderOnElement(htmlElement: HTMLButtonElement | HTMLInputElement) {
+async function deactivatePreloaderOnElement(htmlElement: HTMLButtonElement | HTMLInputElement) {
   const element = htmlElement;
   const preloader = element.querySelector('.preloader') as HTMLElement;
 
@@ -94,6 +94,6 @@ export {
   generateQueryString,
   getRandomCarName,
   getRandomColor,
-  activateProloaderOnElement,
-  deactivateProloaderOnElement,
+  activatePreloaderOnElement,
+  deactivatePreloaderOnElement,
 };

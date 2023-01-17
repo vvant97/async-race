@@ -9,6 +9,15 @@ interface CarFullData extends CarData {
   id: number;
 }
 
+interface DriveCarData {
+  element: HTMLElement;
+  startButton: HTMLButtonElement;
+  stopButton: HTMLButtonElement;
+  id: number;
+}
+
+interface DriveCarFullData extends DriveCarData, CarData {}
+
 interface WinnerData {
   wins: number;
   time: number;
@@ -61,4 +70,6 @@ export {
   CarStatus,
   CarEngineStat,
   CarEngineDriveResponse,
+  DriveCarData,
+  DriveCarFullData,
 };

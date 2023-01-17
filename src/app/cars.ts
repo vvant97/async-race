@@ -10,11 +10,12 @@ import { CARS_AMOUNT_PER_PAGE } from '../utils/constants';
 import { QueryKeys } from '../utils/enums';
 import { CarFullData } from '../utils/types';
 import {
-  activateProloaderOnElement,
-  deactivateProloaderOnElement,
+  activatePreloaderOnElement,
+  deactivatePreloaderOnElement,
   getRandomCarName,
   getRandomColor,
 } from '../utils/utils';
+import startDrive from './carAnimation';
 
 async function setGarageCarsAmount() {
   const carsAmount = document.querySelector('.cars__amount') as HTMLElement;
@@ -247,20 +248,20 @@ function listenCarManageEvents() {
     const target = event.target as HTMLElement;
 
     if (target.matches('.garage__submit-create')) {
-      await activateProloaderOnElement(event.target as HTMLButtonElement);
+      await activatePreloaderOnElement(event.target as HTMLButtonElement);
       await appendCarToCarsList();
       await changeCarsPage(event);
       await renderCurrentCarsPage();
-      await deactivateProloaderOnElement(event.target as HTMLButtonElement);
+      await deactivatePreloaderOnElement(event.target as HTMLButtonElement);
     }
 
     if (target.matches('.cars__remove')) {
-      await activateProloaderOnElement(event.target as HTMLButtonElement);
+      await activatePreloaderOnElement(event.target as HTMLButtonElement);
       await changeCarsPage(event);
       await removeCarFromCarsList(event);
       await renderCurrentCarsPage();
       await changeCarsPage(event);
-      await deactivateProloaderOnElement(event.target as HTMLButtonElement);
+      await deactivatePreloaderOnElement(event.target as HTMLButtonElement);
     }
 
     if (target.matches('.cars__select')) {
@@ -278,14 +279,56 @@ function listenCarManageEvents() {
     }
 
     if (target.matches('.garage__generate')) {
-      await activateProloaderOnElement(event.target as HTMLButtonElement);
+      await activatePreloaderOnElement(event.target as HTMLButtonElement);
       await createOneHundredRandomCars();
       await changeCarsPage(event);
       await renderCurrentCarsPage();
       await setGarageCarsAmount();
-      await deactivateProloaderOnElement(event.target as HTMLButtonElement);
+      await deactivatePreloaderOnElement(event.target as HTMLButtonElement);
     }
   });
 }
 
-export { createCarsInitContainer, listenCarManageEvents, getCarsPagesAmount };
+async function getCarElementsData(event: Event) {
+  const target = event.target as HTMLElement;
+  const container = target.closest('.cars__item') as HTMLLIElement;
+  const element = container.querySelector('.car') as HTMLElement;
+  const carId = container.dataset.carId as string;
+  const car = await getCar(+carId) as CarFullData;
+
+  return {
+    element,
+    car,
+  };
+}
+
+function listenCarEngineEvents() {
+  document.addEventListener('click', async (event: Event) => {
+    const target = event.target as HTMLElement;
+
+    if (target.matches('.cars__start')) {
+      const startButton = target as HTMLButtonElement;
+      const stopButton = startButton.nextElementSibling as HTMLButtonElement;
+      await activatePreloaderOnElement(startButton);
+
+      const { element, car } = await getCarElementsData(event);
+      const { id, name, color } = car;
+
+      await startDrive({
+        element,
+        id,
+        name,
+        color,
+        startButton,
+        stopButton,
+      });
+    }
+  });
+}
+
+export {
+  createCarsInitContainer,
+  listenCarManageEvents,
+  getCarsPagesAmount,
+  listenCarEngineEvents,
+};

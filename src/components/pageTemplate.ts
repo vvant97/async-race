@@ -28,14 +28,14 @@ function createPageTemplate(template: PageTemplate) {
               </div>
               <div class="garage__cars-controls">
                 <button class="button garage__race" >Race</button>
-                <button class="button garage__reset" >Reset</button>
+                <button class="button garage__reset" disabled>Reset</button>
                 <button class="button garage__generate" >Generate cars</button>
               </div>
             </div>
 
             <div class="cars">
               <h2 class="cars__title">Garage: <span class="cars__amount">${template.carsAmount}</span> cars</h2>
-              <h3 class="cars__subtitle">Page: <span class="cars__page">1</span> / <span class="cars__page-all">${template.estimatedCarsPages > 1 ? template.estimatedCarsPages : '1'}</span></h3>
+              <h3 class="cars__subtitle">Page: <span class="cars__page">${template.carsAmount ? '1' : '0'}</span> / <span class="cars__page-all">${template.estimatedCarsPages}</span></h3>
               <ul class="cars__list">${template.carsList}</ul>
               <div class="cars__page-controls">
                 <button class="button cars__prev" disabled>Prev</button>
