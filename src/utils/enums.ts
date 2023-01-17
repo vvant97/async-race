@@ -9,6 +9,7 @@ enum HttpMethods {
 enum Paths {
   GARAGE = '/garage',
   WINNERS = '/winners',
+  ENGINE = '/engine',
 }
 
 enum QueryKeys {
@@ -16,6 +17,8 @@ enum QueryKeys {
   PAGE = '_page',
   SORT = '_sort',
   ORDER = '_order',
+  ID = 'id',
+  STATUS = 'status',
 }
 
 enum ContentTypes {

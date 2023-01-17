@@ -18,15 +18,27 @@ interface WinnerFullData extends WinnerData {
   id: number;
 }
 
+interface CarEngineStat {
+  velocity: number;
+  distance: number;
+}
+
+interface CarEngineDriveResponse {
+  success: true;
+}
+
 type WinnersSort = 'id' | 'wins' | 'time';
 type WinnersOrder = 'ASC' | 'DESC';
-type ParamValue = number | WinnersSort | WinnersOrder | undefined;
+type CarStatus = 'started' | 'stopped' | 'drive';
+type ParamValue = number | WinnersSort | WinnersOrder | CarStatus | undefined;
 
 interface QueryParams {
   [QueryKeys.LIMIT]?: number;
   [QueryKeys.PAGE]?: number;
   [QueryKeys.SORT]?: WinnersSort;
   [QueryKeys.ORDER]?: WinnersOrder;
+  [QueryKeys.ID]?: number;
+  [QueryKeys.STATUS]?: CarStatus;
 }
 
 interface PageTemplate {
@@ -46,4 +58,7 @@ export {
   WinnersOrder,
   ParamValue,
   PageTemplate,
+  CarStatus,
+  CarEngineStat,
+  CarEngineDriveResponse,
 };

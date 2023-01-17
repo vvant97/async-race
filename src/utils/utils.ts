@@ -3,12 +3,14 @@ import {
   WinnersSort,
   WinnersOrder,
   ParamValue,
+  CarStatus,
 } from './types';
 import { CAR_MODELS, CAR_NAMES, QUERY_PARAM_MIN_VALUE } from './constants';
 
 const isObjectEmpty = (obj: {}): boolean => Object.keys(obj).length === 0;
 const isWinnerSort = (value: unknown): value is WinnersSort => value === 'id' || value === 'wins' || value === 'time';
 const isWinnerOrder = (value: unknown): value is WinnersOrder => value === 'ASC' || value === 'DESC';
+const isCarStatus = (value: unknown): value is CarStatus => value === 'started' || value === 'stopped' || value === 'drive';
 
 function generateQueryString(params: QueryParams): string {
   if (isObjectEmpty(params)) {
@@ -24,7 +26,7 @@ function generateQueryString(params: QueryParams): string {
         return false;
       }
 
-      if (!isWinnerSort(paramValue) && !isWinnerOrder(paramValue)) {
+      if (!isWinnerSort(paramValue) && !isWinnerOrder(paramValue) && !isCarStatus(paramValue)) {
         return paramValue >= QUERY_PARAM_MIN_VALUE;
       }
 
