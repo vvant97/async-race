@@ -168,7 +168,7 @@ async function changeCartPageButtonsState() {
     nextButton.disabled = false;
   }
 
-  if (currentCarsPage === 1) {
+  if (currentCarsPage <= 1) {
     prevButton.disabled = true;
   } else {
     prevButton.disabled = false;
@@ -196,10 +196,12 @@ async function changeCarsPage(event: Event) {
     });
     const isLastCarOnPage = cars.length === 0;
 
-    if (isLastCarOnPage && currentCarsPage > 1) {
+    if (isLastCarOnPage && currentCarsPage >= 1) {
       currentCarsPage -= 1;
       await renderCurrentCarsPage();
     }
+  } else if (button.classList.contains('garage__submit-create') && currentCarsPage === 0) {
+    currentCarsPage += 1;
   }
 
   await changeCartPageButtonsState();
