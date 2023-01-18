@@ -1,7 +1,10 @@
-import manageCarMode from './carAnimation';
+import { manageCarEngineDriveMode } from '../api/engine';
+import { QueryKeys } from '../utils/enums';
+import { togglePreloaderOnElements } from '../utils/utils';
+import getAnimation from './carAnimation';
 
 function listenCarEngineEvents() {
-  document.addEventListener('click', (event: Event) => {
+  document.addEventListener('click', async (event: Event) => {
     const target = event.target as HTMLElement;
 
     if (target.matches('.cars__start')) {
@@ -10,10 +13,25 @@ function listenCarEngineEvents() {
       const carId = (target.closest('.cars__item') as HTMLElement)
         .dataset.carId as string;
 
-      startButton.disabled = true;
-      stopButton.disabled = false;
+      togglePreloaderOnElements([startButton]);
 
-      manageCarMode(+carId, 'start');
+      const animation = await getAnimation(+carId, 'start') || undefined;
+
+      if (animation) {
+        animation.play();
+        togglePreloaderOnElements([startButton]);
+        startButton.disabled = true;
+        stopButton.disabled = false;
+
+        try {
+          await manageCarEngineDriveMode({
+            [QueryKeys.ID]: +carId,
+            [QueryKeys.STATUS]: 'drive',
+          });
+        } catch (error) {
+          animation.pause();
+        }
+      }
     }
 
     if (target.matches('.cars__stop')) {
@@ -22,10 +40,12 @@ function listenCarEngineEvents() {
       const carId = (target.closest('.cars__item') as HTMLElement)
         .dataset.carId as string;
 
+      togglePreloaderOnElements([stopButton]);
+
+      await getAnimation(+carId, 'stop');
+      togglePreloaderOnElements([stopButton]);
       stopButton.disabled = true;
       startButton.disabled = false;
-
-      manageCarMode(+carId, 'stop');
     }
   });
 }

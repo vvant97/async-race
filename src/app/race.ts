@@ -1,11 +1,14 @@
+import { manageCarEngineDriveMode } from '../api/engine';
 import { getCars } from '../api/garage';
 import { CARS_AMOUNT_PER_PAGE } from '../utils/constants';
 import { QueryKeys } from '../utils/enums';
 import { CarFullData, RaceMode } from '../utils/types';
-import manageCarMode from './carAnimation';
+import { togglePreloaderOnElements } from '../utils/utils';
+import getAnimation from './carAnimation';
 import { currentCarsPage } from './cars';
 
-async function manageRaceMode(mode: RaceMode) {
+async function getAllAnimations(mode: RaceMode) {
+  const animations: Promise<Animation>[] = [];
   const cars = await getCars({
     [QueryKeys.PAGE]: currentCarsPage.page,
     [QueryKeys.LIMIT]: CARS_AMOUNT_PER_PAGE,
@@ -13,37 +16,67 @@ async function manageRaceMode(mode: RaceMode) {
 
   cars
     .map((car) => car.id)
-    .forEach((carId) => {
+    .forEach((id) => {
       if (mode === 'race') {
-        manageCarMode(carId, 'race');
+        const animation = getAnimation(+id, 'start') as Promise<Animation>;
+        animations.push(animation as Promise<Animation>);
       } else {
-        manageCarMode(carId, 'reset');
+        getAnimation(id, 'reset');
       }
     });
+
+  return animations;
 }
 
 function listenRaceEvents() {
-  document.addEventListener('click', (event: Event) => {
+  document.addEventListener('click', async (event: Event) => {
     const target = event.target as HTMLButtonElement;
 
     if (target.classList.contains('garage__race')) {
-      const rcaeButton = event.target as HTMLButtonElement;
-      const resetButton = rcaeButton.nextElementSibling as HTMLButtonElement;
+      const raceButton = event.target as HTMLButtonElement;
+      const resetButton = raceButton.nextElementSibling as HTMLButtonElement;
+      const allStartButtons = document.querySelectorAll('.cars__start');
 
-      rcaeButton.disabled = true;
-      resetButton.disabled = false;
+      togglePreloaderOnElements([
+        raceButton,
+        ...([...allStartButtons] as HTMLButtonElement[]),
+      ]);
 
-      manageRaceMode('race');
+      const animations = await getAllAnimations('race');
+
+      Promise.all(animations)
+        .then((animationsArray) => {
+          animationsArray.forEach(async (animation) => {
+            togglePreloaderOnElements([
+              raceButton,
+              ...([...allStartButtons] as HTMLButtonElement[]),
+            ]);
+            raceButton.disabled = true;
+            resetButton.disabled = false;
+
+            ([...allStartButtons] as HTMLButtonElement[]).forEach((button) => {
+              button.disabled = true;
+            });
+
+            animation.play();
+
+            try {
+              await manageCarEngineDriveMode({
+                [QueryKeys.ID]: +animation.id,
+                [QueryKeys.STATUS]: 'drive',
+              });
+            } catch (error) {
+              animation.pause();
+            }
+          });
+        });
     }
 
     if (target.classList.contains('garage__reset')) {
       const resetButton = event.target as HTMLButtonElement;
-      const raceButton = resetButton.previousElementSibling as HTMLButtonElement;
 
-      resetButton.disabled = true;
-      raceButton.disabled = false;
-
-      manageRaceMode('reset');
+      togglePreloaderOnElements([resetButton]);
+      getAllAnimations('reset');
     }
   });
 }

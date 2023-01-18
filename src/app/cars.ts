@@ -125,6 +125,12 @@ async function renderCurrentCarsPage() {
       return createCarTemplate({ name, color, id });
     })
     .reduce((template, car) => template + car, '');
+
+  const resetButton = document.querySelector('.garage__reset') as HTMLButtonElement;
+  const raceButton = resetButton.previousElementSibling as HTMLButtonElement;
+
+  resetButton.disabled = true;
+  raceButton.disabled = false;
 }
 
 async function changeCartPageButtonsState() {

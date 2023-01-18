@@ -109,4 +109,5 @@ export {
   activatePreloaderOnElement,
   deactivatePreloaderOnElement,
   togglePreloaderOnElements,
+  getRandomNumber,
 };
