@@ -90,10 +90,23 @@ async function deactivatePreloaderOnElement(htmlElement: HTMLButtonElement | HTM
   preloader.remove();
 }
 
+function togglePreloaderOnElements(elements: (HTMLButtonElement | HTMLInputElement)[]) {
+  elements.forEach((element) => {
+    const preloader = element.querySelector('.preloader');
+
+    if (preloader) {
+      deactivatePreloaderOnElement(element);
+    } else {
+      activatePreloaderOnElement(element);
+    }
+  });
+}
+
 export {
   generateQueryString,
   getRandomCarName,
   getRandomColor,
   activatePreloaderOnElement,
   deactivatePreloaderOnElement,
+  togglePreloaderOnElements,
 };

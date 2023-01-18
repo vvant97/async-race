@@ -1,99 +1,61 @@
 import { manageCarEngine, manageCarEngineDriveMode } from '../api/engine';
 import { QueryKeys } from '../utils/enums';
-import { DriveCarData, DriveCarFullData } from '../utils/types';
-import { activatePreloaderOnElement, deactivatePreloaderOnElement } from '../utils/utils';
+import { AnimationOptions, RaceMode } from '../utils/types';
 
-function createAnimation(target: HTMLElement, duration: number, endPoint: number): Animation {
-  const effect = new KeyframeEffect(
-    target,
-    [
-      { transform: 'translateX(0)' },
-      { transform: `translateX(${endPoint}px)` },
-    ],
-    { duration, fill: 'forwards' },
-  );
-  const animation = new Animation(effect);
+export const animationsData: Animation[] = [];
+
+const findAnimation = (id: number): Animation => animationsData
+  .filter((animation) => +animation.id === id).at(-1) as Animation;
+
+function calculateCarAnimationEndpoint(target: HTMLElement): number {
+  const trackWidth = (target.parentElement as HTMLElement).offsetWidth;
+  return trackWidth - (target.offsetWidth + target.offsetLeft);
+}
+
+function startAnimation(id: number, options: AnimationOptions): Animation {
+  const { target, duration, endpoint } = options;
+  const keyframes = [
+    { transform: 'translateX(0)' },
+    { transform: `translateX(${endpoint}px)` },
+  ];
+  const animation = target.animate(keyframes, {
+    duration,
+    fill: 'both',
+    id: id.toString(),
+  });
 
   return animation;
 }
 
-function calculateAnimationEndpoint(): number {
-  const ELEMENTS_GAP = 10;
-  const carTrack = document.querySelector('.cars__track') as HTMLElement;
-  const carButtonsContainer = document.querySelector('.cars__state') as HTMLElement;
-  const car = document.querySelector('.car') as HTMLElement;
-
-  return carTrack.clientWidth - (carButtonsContainer.clientWidth + car.clientWidth + ELEMENTS_GAP);
-}
-
-async function stopDrive(carData: DriveCarData, animation: Animation) {
-  const {
-    element,
-    stopButton,
-    startButton,
-  } = carData;
-
-  await activatePreloaderOnElement(stopButton);
-
-  await manageCarEngine({
-    [QueryKeys.ID]: carData.id,
-    [QueryKeys.STATUS]: 'stopped',
-  });
-
-  await deactivatePreloaderOnElement(stopButton);
-
-  animation.cancel();
-  element.style.transform = 'translateX(0)';
-  stopButton.disabled = true;
-  startButton.disabled = false;
-}
-
-async function startDrive(carData: DriveCarFullData) {
-  const {
-    element: car,
-    stopButton,
-    startButton,
-    id,
-  } = carData;
-
-  const engineStat = await manageCarEngine({
+async function manageCarMode(id: number, mode: RaceMode) {
+  const carEngineStat = await manageCarEngine({
     [QueryKeys.ID]: id,
-    [QueryKeys.STATUS]: 'started',
+    [QueryKeys.STATUS]: (mode === 'start' || mode === 'race') ? 'started' : 'stopped',
   });
+  const carElement = document.querySelector(`.cars__item[data-car-id="${id}"] .car`) as HTMLElement;
+  const animationEndpoint = calculateCarAnimationEndpoint(carElement);
 
-  const duration = engineStat.distance / engineStat.velocity;
-  const endPoint = calculateAnimationEndpoint();
-  const animation = createAnimation(car, duration, endPoint);
-
-  animation.addEventListener('finish', () => {
-    car.style.transform = `translateX(${endPoint}px)`;
-  });
-
-  stopButton.addEventListener('click', async () => {
-    await stopDrive(
-      {
-        element: car,
-        stopButton,
-        startButton,
-        id,
-      },
-      animation,
-    );
-  });
-
-  animation.play();
-  stopButton.disabled = false;
-  await deactivatePreloaderOnElement(startButton);
-  startButton.disabled = true;
-
-  try {
-    await manageCarEngineDriveMode({
-      [QueryKeys.ID]: carData.id,
-      [QueryKeys.STATUS]: 'drive',
+  if (mode === 'start' || mode === 'race') {
+    const animation = startAnimation(id, {
+      target: carElement,
+      duration: carEngineStat.distance / carEngineStat.velocity,
+      endpoint: animationEndpoint,
     });
-  } catch (error) {
-    animation.pause();
+
+    animationsData.push(animation);
+    try {
+      await manageCarEngineDriveMode({
+        [QueryKeys.ID]: id,
+        [QueryKeys.STATUS]: 'drive',
+      });
+    } catch (error) {
+      animation.pause();
+    }
+  } else if (mode === 'stop' || mode === 'reset') {
+    const animationToStop = findAnimation(id);
+
+    animationToStop.cancel();
   }
 }
 
-export default startDrive;
+export default manageCarMode;

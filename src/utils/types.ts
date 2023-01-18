@@ -57,6 +57,20 @@ interface PageTemplate {
   estimatedCarsPages: number;
 }
 
+interface AnimationOptions {
+  target: HTMLElement;
+  duration: number;
+  endpoint: number;
+}
+
+interface AnimationEndpointElements {
+  track: HTMLElement;
+  buttonsContainer: HTMLElement;
+  car: HTMLElement;
+}
+
+type RaceMode = 'start' | 'stop' | 'race' | 'reset';
+
 export {
   CarData,
   CarFullData,
@@ -72,4 +86,7 @@ export {
   CarEngineDriveResponse,
   DriveCarData,
   DriveCarFullData,
+  AnimationOptions,
+  AnimationEndpointElements,
+  RaceMode,
 };

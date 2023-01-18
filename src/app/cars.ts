@@ -13,7 +13,9 @@ import { QueryKeys } from '../utils/enums';
 import { CarFullData } from '../utils/types';
 import createOneHundredRandomCars from './randomCars';
 
-let currentCarsPage = 1;
+export const currentCarsPage = {
+  page: 1,
+};
 
 async function setGarageCarsAmount() {
   const carsAmount = document.querySelector('.cars__amount') as HTMLElement;
@@ -114,7 +116,7 @@ async function renderCurrentCarsPage() {
   const carsList = document.querySelector('.cars__list') as HTMLElement;
   const cars = await getCars({
     [QueryKeys.LIMIT]: CARS_AMOUNT_PER_PAGE,
-    [QueryKeys.PAGE]: currentCarsPage,
+    [QueryKeys.PAGE]: currentCarsPage.page,
   });
 
   carsList.innerHTML = cars
@@ -130,8 +132,8 @@ async function changeCartPageButtonsState() {
   const prevButton = document.querySelector('.cars__prev') as HTMLButtonElement;
   const nextButton = document.querySelector('.cars__next') as HTMLButtonElement;
 
-  nextButton.disabled = currentCarsPage === estimatedPages;
-  prevButton.disabled = currentCarsPage <= 1;
+  nextButton.disabled = currentCarsPage.page === estimatedPages;
+  prevButton.disabled = currentCarsPage.page <= 1;
 }
 
 async function changeCarsPage(event: Event) {
@@ -142,30 +144,30 @@ async function changeCarsPage(event: Event) {
 
   if (button.classList.contains('cars__next')) {
     if (!button.disabled) {
-      currentCarsPage += 1;
+      currentCarsPage.page += 1;
     }
   } else if (button.classList.contains('cars__prev')) {
     if (!button.disabled) {
-      currentCarsPage -= 1;
+      currentCarsPage.page -= 1;
     }
   } else if (button.classList.contains('cars__remove')) {
     const cars = await getCars({
       [QueryKeys.LIMIT]: CARS_AMOUNT_PER_PAGE,
-      [QueryKeys.PAGE]: currentCarsPage,
+      [QueryKeys.PAGE]: currentCarsPage.page,
     });
     const isLastCarOnPage = cars.length === 0;
 
-    if (isLastCarOnPage && currentCarsPage >= 1) {
-      currentCarsPage -= 1;
+    if (isLastCarOnPage && currentCarsPage.page >= 1) {
+      currentCarsPage.page -= 1;
       await renderCurrentCarsPage();
     }
   } else if ((button.classList.contains('garage__submit-create')
-    || button.classList.contains('garage__generate')) && currentCarsPage === 0) {
-    currentCarsPage += 1;
+    || button.classList.contains('garage__generate')) && currentCarsPage.page === 0) {
+    currentCarsPage.page += 1;
   }
 
   await changeCartPageButtonsState();
-  pageContainer.textContent = currentCarsPage.toString();
+  pageContainer.textContent = currentCarsPage.page.toString();
   allPagesContainer.textContent = estimatedPages.toString();
 }
 
