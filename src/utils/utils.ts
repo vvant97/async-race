@@ -102,6 +102,16 @@ function togglePreloaderOnElements(elements: (HTMLButtonElement | HTMLInputEleme
   });
 }
 
+function listenRemoveOverlay() {
+  document.addEventListener('click', (event) => {
+    if ((event.target as HTMLElement).matches('.overlay')) {
+      const overlay = document.querySelector('.overlay') as HTMLElement;
+
+      overlay.remove();
+    }
+  });
+}
+
 export {
   generateQueryString,
   getRandomCarName,
@@ -110,4 +120,5 @@ export {
   deactivatePreloaderOnElement,
   togglePreloaderOnElements,
   getRandomNumber,
+  listenRemoveOverlay,
 };

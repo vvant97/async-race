@@ -1,4 +1,5 @@
 import { manageCarEngine } from '../api/engine';
+import createWinnerTemplate from '../components/winnerTemplate';
 import { QueryKeys } from '../utils/enums';
 import { AnimationOptions, RaceMode } from '../utils/types';
 import { getRandomNumber, togglePreloaderOnElements } from '../utils/utils';
@@ -54,13 +55,24 @@ function manageCarsButtonsState() {
   });
 }
 
+function getWinnerInfoFromAnimation(animation: Animation) {
+  const { id, currentTime } = animation;
+  const item = document.querySelector(`.cars__item[data-car-id="${id}"]`) as HTMLElement;
+  const name = (item.querySelector('.cars__car-name') as HTMLElement).textContent as string;
+  const car = item.querySelector('.car') as HTMLLIElement;
+  const time = (currentTime as number) / 1000;
+
+  return { name, car, time };
+}
+
 const showWinner = (event: Event) => {
   if (animationsData.maxWinners === 1 && animationsData.raceMode) {
     const target = event.target as Animation;
-    const carId = target.id as string;
+    const winnerData = getWinnerInfoFromAnimation(target);
+    const winnerTemplate = createWinnerTemplate(winnerData.name, winnerData.time.toFixed(2));
 
+    document.body.insertAdjacentHTML('beforebegin', winnerTemplate);
     animationsData.raceMode = false;
-    console.log(carId);
   }
 };
 

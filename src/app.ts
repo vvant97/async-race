@@ -5,6 +5,7 @@ import listenChangePageView from './app/changeView';
 import { listenCarManageEvents } from './app/cars';
 import listenCarEngineEvents from './app/carEngine';
 import listenRaceEvents from './app/race';
+import { listenRemoveOverlay } from './utils/utils';
 
 async function init() {
   await renderPage();
@@ -12,6 +13,7 @@ async function init() {
   listenCarManageEvents();
   listenCarEngineEvents();
   listenRaceEvents();
+  listenRemoveOverlay();
 }
 
 init();
