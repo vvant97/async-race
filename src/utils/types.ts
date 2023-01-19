@@ -27,6 +27,14 @@ interface WinnerFullData extends WinnerData {
   id: number;
 }
 
+interface WinnerDataExtended {
+  id: number;
+  car: Node;
+  time: number;
+  name: string;
+  wins: number;
+}
+
 interface CarEngineStat {
   velocity: number;
   distance: number;
@@ -89,4 +97,5 @@ export {
   AnimationOptions,
   AnimationEndpointElements,
   RaceMode,
+  WinnerDataExtended,
 };

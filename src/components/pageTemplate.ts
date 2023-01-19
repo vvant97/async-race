@@ -57,7 +57,7 @@ function createPageTemplate(template: PageTemplate) {
                   <th>Best time, s</th>
                 </tr>
               </thead>
-              <tbody></tbody>
+              <tbody class="winners__body"></tbody>
             </table>
             <div class="winners__page-controls">
               <button class="button winners__prev" disabled>Prev</button>

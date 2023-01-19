@@ -4,6 +4,7 @@ import {
   WinnersOrder,
   ParamValue,
   CarStatus,
+  WinnerFullData,
 } from './types';
 import { CAR_MODELS, CAR_NAMES, QUERY_PARAM_MIN_VALUE } from './constants';
 
@@ -11,6 +12,7 @@ const isObjectEmpty = (obj: {}): boolean => Object.keys(obj).length === 0;
 const isWinnerSort = (value: unknown): value is WinnersSort => value === 'id' || value === 'wins' || value === 'time';
 const isWinnerOrder = (value: unknown): value is WinnersOrder => value === 'ASC' || value === 'DESC';
 const isCarStatus = (value: unknown): value is CarStatus => value === 'started' || value === 'stopped' || value === 'drive';
+export const isWinnerExist = (object: {}): object is WinnerFullData => 'id' in object;
 
 function generateQueryString(params: QueryParams): string {
   if (isObjectEmpty(params)) {

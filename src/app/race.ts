@@ -37,6 +37,15 @@ function listenRaceEvents() {
       const resetButton = raceButton.nextElementSibling as HTMLButtonElement;
       const allStartButtons = document.querySelectorAll('.cars__start');
       const allStopButtons = document.querySelectorAll('.cars__stop');
+      const generateButton = document.querySelector('.garage__generate') as HTMLButtonElement;
+      const createButton = document.querySelector('.garage__submit-create') as HTMLButtonElement;
+      const nextPageButton = document.querySelector('.cars__next') as HTMLButtonElement;
+      const prevPageButton = document.querySelector('.cars__prev') as HTMLButtonElement;
+
+      generateButton.disabled = true;
+      createButton.disabled = true;
+      nextPageButton.disabled = true;
+      prevPageButton.disabled = true;
 
       togglePreloaderOnElements([
         raceButton,

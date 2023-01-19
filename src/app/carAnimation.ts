@@ -1,8 +1,16 @@
 import { manageCarEngine } from '../api/engine';
-import createWinnerTemplate from '../components/winnerTemplate';
+import { createWinnerTemplate } from '../components/winnerTemplate';
+import { WINNERS_AMOUNT_PER_PAGE } from '../utils/constants';
 import { QueryKeys } from '../utils/enums';
 import { AnimationOptions, RaceMode } from '../utils/types';
 import { getRandomNumber, togglePreloaderOnElements } from '../utils/utils';
+import { currentCarsPage, getCarsPagesAmount } from './cars';
+import {
+  currentWinnersPage,
+  renderWinnersTable,
+  updateWinnerData,
+  winnnersSavedData,
+} from './winners';
 
 interface AnimationData {
   animations: Animation[];
@@ -42,10 +50,28 @@ function createAnimation(id: number, options: AnimationOptions): Animation {
   return animation;
 }
 
-function manageCarsButtonsState() {
+async function manageCarsButtonsState() {
   const resetButton = document.querySelector('.garage__reset') as HTMLButtonElement;
   const raceButton = resetButton.previousElementSibling as HTMLButtonElement;
   const allStartButtons = document.querySelectorAll('.cars__start');
+  const generateButton = document.querySelector('.garage__generate') as HTMLButtonElement;
+  const createButton = document.querySelector('.garage__submit-create') as HTMLButtonElement;
+  const nextPageButton = document.querySelector('.cars__next') as HTMLButtonElement;
+  const prevPageButton = document.querySelector('.cars__prev') as HTMLButtonElement;
+
+  const pagesAmount = await getCarsPagesAmount();
+
+  generateButton.disabled = false;
+  createButton.disabled = false;
+
+  if (currentCarsPage.page === 1) {
+    nextPageButton.disabled = false;
+  } else if (currentCarsPage.page > 1 && currentCarsPage.page < pagesAmount) {
+    nextPageButton.disabled = false;
+    prevPageButton.disabled = false;
+  } else {
+    prevPageButton.disabled = false;
+  }
 
   togglePreloaderOnElements([resetButton]);
   resetButton.disabled = true;
@@ -55,24 +81,34 @@ function manageCarsButtonsState() {
   });
 }
 
-function getWinnerInfoFromAnimation(animation: Animation) {
-  const { id, currentTime } = animation;
-  const item = document.querySelector(`.cars__item[data-car-id="${id}"]`) as HTMLElement;
-  const name = (item.querySelector('.cars__car-name') as HTMLElement).textContent as string;
-  const car = item.querySelector('.car') as HTMLLIElement;
+async function startWinnerUpdating(animation: Animation) {
+  const { currentTime } = animation;
+  const id = +(animation.id as string);
   const time = (currentTime as number) / 1000;
+  const wins = 1;
 
-  return { name, car, time };
+  await updateWinnerData({ id, time, wins });
+  await renderWinnersTable({
+    [QueryKeys.LIMIT]: WINNERS_AMOUNT_PER_PAGE,
+    [QueryKeys.PAGE]: currentWinnersPage.page,
+  });
 }
 
 const showWinner = (event: Event) => {
   if (animationsData.maxWinners === 1 && animationsData.raceMode) {
     const target = event.target as Animation;
-    const winnerData = getWinnerInfoFromAnimation(target);
-    const winnerTemplate = createWinnerTemplate(winnerData.name, winnerData.time.toFixed(2));
+    const id = +(target.id as string);
+    const item = document.querySelector(`.cars__item[data-car-id="${id}"]`) as HTMLElement;
+    const name = (item.querySelector('.cars__car-name') as HTMLElement).textContent as string;
+    const car = (item.querySelector('.car') as HTMLLIElement).innerHTML;
+    const time = target.currentTime as number;
+    const winnerTemplate = createWinnerTemplate(name, (time / 1000).toFixed(2));
 
     document.body.insertAdjacentHTML('beforebegin', winnerTemplate);
     animationsData.raceMode = false;
+
+    winnnersSavedData.push({ id, name, car });
+    startWinnerUpdating(target);
   }
 };
 

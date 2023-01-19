@@ -18,7 +18,7 @@ async function getWinner(id: number): Promise<WinnerFullData | {}> {
   return winner;
 }
 
-async function createWinner(body: WinnerFullData): Promise<Response> {
+async function createWinner(body: WinnerFullData): Promise<WinnerFullData> {
   const res = await fetch(`${ORIGIN}${Paths.WINNERS}`, {
     method: HttpMethods.POST,
     headers: {
@@ -26,8 +26,9 @@ async function createWinner(body: WinnerFullData): Promise<Response> {
     },
     body: JSON.stringify(body),
   });
+  const winner: WinnerFullData = await res.json();
 
-  return res;
+  return winner;
 }
 
 async function deleteWinner(id: number): Promise<Response> {
@@ -38,7 +39,7 @@ async function deleteWinner(id: number): Promise<Response> {
   return res;
 }
 
-async function updateWinner(id: number, body: WinnerData): Promise<Response> {
+async function updateWinner(id: number, body: WinnerData): Promise<WinnerFullData> {
   const res = await fetch(`${ORIGIN}${Paths.WINNERS}/${id}`, {
     method: HttpMethods.PUT,
     headers: {
@@ -46,8 +47,9 @@ async function updateWinner(id: number, body: WinnerData): Promise<Response> {
     },
     body: JSON.stringify(body),
   });
+  const winner: WinnerFullData = await res.json();
 
-  return res;
+  return winner;
 }
 
 export {
