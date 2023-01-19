@@ -7,12 +7,14 @@ interface AnimationData {
   animations: Animation[];
   finishedAnimations: number;
   maxWinners: number;
+  raceMode: boolean;
 }
 
 export const animationsData: AnimationData = {
   animations: [],
   finishedAnimations: 0,
   maxWinners: 0,
+  raceMode: false,
 };
 
 const findAnimation = (id: number): Animation => animationsData.animations
@@ -53,10 +55,11 @@ function manageCarsButtonsState() {
 }
 
 const showWinner = (event: Event) => {
-  if (animationsData.maxWinners === 1) {
+  if (animationsData.maxWinners === 1 && animationsData.raceMode) {
     const target = event.target as Animation;
     const carId = target.id as string;
 
+    animationsData.raceMode = false;
     console.log(carId);
   }
 };

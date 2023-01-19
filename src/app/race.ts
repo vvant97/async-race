@@ -4,7 +4,7 @@ import { CARS_AMOUNT_PER_PAGE } from '../utils/constants';
 import { QueryKeys } from '../utils/enums';
 import { CarFullData, RaceMode } from '../utils/types';
 import { togglePreloaderOnElements } from '../utils/utils';
-import getAnimation from './carAnimation';
+import getAnimation, { animationsData } from './carAnimation';
 import { currentCarsPage } from './cars';
 
 async function getAllAnimations(mode: RaceMode) {
@@ -36,6 +36,7 @@ function listenRaceEvents() {
       const raceButton = event.target as HTMLButtonElement;
       const resetButton = raceButton.nextElementSibling as HTMLButtonElement;
       const allStartButtons = document.querySelectorAll('.cars__start');
+      const allStopButtons = document.querySelectorAll('.cars__stop');
 
       togglePreloaderOnElements([
         raceButton,
@@ -46,18 +47,9 @@ function listenRaceEvents() {
 
       Promise.all(animations)
         .then((animationsArray) => {
+          animationsData.raceMode = true;
+
           animationsArray.forEach(async (animation) => {
-            togglePreloaderOnElements([
-              raceButton,
-              ...([...allStartButtons] as HTMLButtonElement[]),
-            ]);
-            raceButton.disabled = true;
-            resetButton.disabled = false;
-
-            ([...allStartButtons] as HTMLButtonElement[]).forEach((button) => {
-              button.disabled = true;
-            });
-
             animation.play();
 
             try {
@@ -69,6 +61,18 @@ function listenRaceEvents() {
               animation.pause();
             }
           });
+
+          togglePreloaderOnElements([
+            raceButton,
+            ...([...allStartButtons] as HTMLButtonElement[]),
+          ]);
+
+          ([...allStartButtons, ...allStopButtons] as HTMLButtonElement[]).forEach((button) => {
+            button.disabled = true;
+          });
+
+          raceButton.disabled = true;
+          resetButton.disabled = false;
         });
     }
 
