@@ -7,5 +7,6 @@
   },
   "parserOptions": {
     "project": "./tsconfig.json"
-  }
+  },
+  "ignorePatterns": ["dist", "webpack.config.js"]
 }
