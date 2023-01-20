@@ -12,6 +12,7 @@ import { CARS_AMOUNT_PER_PAGE } from '../utils/constants';
 import { QueryKeys } from '../utils/enums';
 import { CarFullData } from '../utils/types';
 import createOneHundredRandomCars from './randomCars';
+import { removeWinnerFromList } from './winners';
 
 export const currentCarsPage = {
   page: 1,
@@ -190,9 +191,14 @@ function listenCarManageEvents() {
     }
 
     if (target.matches('.cars__remove')) {
+      const carId = +(((event.target as HTMLElement)
+        .closest('.cars__item') as HTMLElement)
+        .dataset.carId as string);
+
       await activatePreloaderOnElement(event.target as HTMLButtonElement);
       await changeCarsPage(event);
       await removeCarFromCarsList(event);
+      await removeWinnerFromList(carId);
       await renderCurrentCarsPage();
       await changeCarsPage(event);
       await deactivatePreloaderOnElement(event.target as HTMLButtonElement);
