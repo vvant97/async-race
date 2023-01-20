@@ -13,6 +13,7 @@ import { QueryKeys } from '../utils/enums';
 import { CarFullData } from '../utils/types';
 import createOneHundredRandomCars from './randomCars';
 import { removeWinnerFromList } from './winners';
+import changePaginationElementsState from './winnersPagination';
 
 export const currentCarsPage = {
   page: 1,
@@ -199,6 +200,7 @@ function listenCarManageEvents() {
       await changeCarsPage(event);
       await removeCarFromCarsList(event);
       await removeWinnerFromList(carId);
+      await changePaginationElementsState();
       await renderCurrentCarsPage();
       await changeCarsPage(event);
       await deactivatePreloaderOnElement(event.target as HTMLButtonElement);

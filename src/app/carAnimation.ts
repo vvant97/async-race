@@ -11,6 +11,7 @@ import {
   updateWinnerData,
   winnnersSavedData,
 } from './winners';
+import changePaginationElementsState from './winnersPagination';
 
 interface AnimationData {
   animations: Animation[];
@@ -97,6 +98,7 @@ async function startWinnerUpdating(animation: Animation) {
     [QueryKeys.LIMIT]: WINNERS_AMOUNT_PER_PAGE,
     [QueryKeys.PAGE]: currentWinnersPage.page,
   });
+  await changePaginationElementsState();
 }
 
 const showWinner = (event: Event) => {

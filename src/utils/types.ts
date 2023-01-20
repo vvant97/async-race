@@ -79,6 +79,12 @@ interface AnimationEndpointElements {
 
 type RaceMode = 'start' | 'stop' | 'race' | 'reset';
 
+interface WinnnersSavedData {
+  id: number,
+  name: string;
+  car: string;
+}
+
 export {
   CarData,
   CarFullData,
@@ -98,4 +104,5 @@ export {
   AnimationEndpointElements,
   RaceMode,
   WinnerDataExtended,
+  WinnnersSavedData,
 };

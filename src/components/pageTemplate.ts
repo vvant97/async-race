@@ -46,15 +46,15 @@ function createPageTemplate(template: PageTemplate) {
 
           <section class="winners hidden">
             <h2 class="winners__title">Winners: <span class="winners__amount">${template.winnersAmount}</span> cars</h2>
-            <h3 class="winners__subtitle">Page #<span class="winners__page">1</span></h3>
+            <h3 class="winners__subtitle">Page: <span class="winners__page">1</span> / <span class="winners__page-all">1</span></h3>
             <table class="winners__table">
               <thead>
                 <tr>
-                  <th>Number</th>
-                  <th>Car</th>
-                  <th>Name</th>
-                  <th>Wins</th>
-                  <th>Best time, s</th>
+                  <th class="winners__number-header">#</th>
+                  <th class="winners__car-header">Car</th>
+                  <th class="winners__name-header">Name</th>
+                  <th class="winners__wins-header" data-sort-order="ASC">Wins <span class="winners__wins-icon"></span></th>
+                  <th class="winners__time-header" data-sort-order="DESC">Best time, s <span class="winners__time-icon"></span></th>
                 </tr>
               </thead>
               <tbody class="winners__body"></tbody>

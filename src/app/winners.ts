@@ -4,14 +4,8 @@ import {
 import { createWinnerTableItem } from '../components/winnerTemplate';
 import { WINNERS_AMOUNT_PER_PAGE } from '../utils/constants';
 import { QueryKeys } from '../utils/enums';
-import { QueryParams, WinnerFullData } from '../utils/types';
+import { QueryParams, WinnerFullData, WinnnersSavedData } from '../utils/types';
 import { isWinnerExist } from '../utils/utils';
-
-interface WinnnersSavedData {
-  id: number,
-  name: string;
-  car: string;
-}
 
 const cachedWinners = JSON.parse(localStorage.getItem('winners') as string);
 export const winnnersSavedData: WinnnersSavedData[] = cachedWinners || [];
@@ -40,14 +34,16 @@ async function updateWinnerData(data: WinnerFullData) {
   }
 }
 
-async function renderWinnersTable(params?: QueryParams) {
-  const allWinners = await getWinners(params);
+async function renderWinnersTable(params?: QueryParams, additionalParams?: QueryParams) {
+  const allWinners = await getWinners(additionalParams);
+  const winners = await getWinners(params);
   const winnersTable = document.querySelector('.winners__body') as HTMLElement;
   const winnersList: HTMLElement[] = [];
 
-  allWinners.forEach((winner, index) => {
+  winners.forEach((winner) => {
     const { time, wins, id } = winner;
     const savedWinner = winnnersSavedData.find((object) => object.id === id);
+    const number = allWinners.findIndex((object) => object.id === id);
 
     let name;
     let car;
@@ -68,7 +64,7 @@ async function renderWinnersTable(params?: QueryParams) {
     }
 
     const winnerTemplate = createWinnerTableItem({
-      wins, time, id: index + 1, car, name,
+      wins, time, id: number + 1, car, name,
     });
 
     winnersList.push(winnerTemplate);
@@ -90,6 +86,69 @@ async function removeWinnerFromList(id: number) {
     [QueryKeys.PAGE]: currentWinnersPage.page,
   });
 }
+
+document.addEventListener('click', async (event) => {
+  const target = event.target as HTMLElement;
+
+  if (target.matches('.winners__wins-header') || target.matches('.winners__time-header')) {
+    const winsIcon = document.querySelector('.winners__wins-icon') as HTMLElement;
+    const timeIcon = document.querySelector('.winners__time-icon') as HTMLElement;
+
+    let sort: 'wins' | 'time';
+    let order: 'ASC' | 'DESC';
+
+    if (target.matches('.winners__wins-header')) {
+      const timeHeader = target.nextElementSibling as HTMLElement;
+
+      sort = 'wins';
+
+      if (target.dataset.sortOrder === 'DESC') {
+        order = 'ASC';
+        target.dataset.sortOrder = 'ASC';
+        winsIcon.innerHTML = '<i class="bi bi-sort-up-alt"></i>';
+      } else {
+        order = 'DESC';
+        target.dataset.sortOrder = 'DESC';
+        winsIcon.innerHTML = '<i class="bi bi-sort-up"></i>';
+      }
+
+      target.dataset.sorted = 'true';
+      timeHeader.dataset.sorted = 'false';
+      timeIcon.innerHTML = '';
+    } else {
+      const winsHeader = target.previousElementSibling as HTMLElement;
+
+      sort = 'time';
+
+      if (target.dataset.sortOrder === 'DESC') {
+        order = 'ASC';
+        target.dataset.sortOrder = 'ASC';
+        timeIcon.innerHTML = '<i class="bi bi-sort-up-alt"></i>';
+      } else {
+        order = 'DESC';
+        target.dataset.sortOrder = 'DESC';
+        timeIcon.innerHTML = '<i class="bi bi-sort-up"></i>';
+      }
+
+      target.dataset.sorted = 'true';
+      winsHeader.dataset.sorted = 'false';
+      winsIcon.innerHTML = '';
+    }
+
+    await renderWinnersTable(
+      {
+        [QueryKeys.LIMIT]: WINNERS_AMOUNT_PER_PAGE,
+        [QueryKeys.PAGE]: currentWinnersPage.page,
+        [QueryKeys.SORT]: sort,
+        [QueryKeys.ORDER]: order,
+      },
+      {
+        [QueryKeys.SORT]: sort,
+        [QueryKeys.ORDER]: order,
+      },
+    );
+  }
+});
 
 export {
   renderWinnersTable,
