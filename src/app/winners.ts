@@ -36,7 +36,7 @@ async function updateWinnerData(data: WinnerFullData) {
   if (!isWinnerExist(winner)) {
     await createWinner({ id, time, wins });
   } else {
-    await updateExistingWinnerData({ id, time: winner.time, wins }, time);
+    await updateExistingWinnerData({ id, time: winner.time, wins: winner.wins }, time);
   }
 }
 
