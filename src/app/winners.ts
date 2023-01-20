@@ -53,6 +53,8 @@ async function renderWinnersTable(params?: QueryParams, additionalParams?: Query
 
       name = (item.querySelector('.cars__car-name') as HTMLElement).textContent as string;
       car = (item.querySelector('.car') as HTMLLIElement).cloneNode(true);
+
+      winnnersSavedData.push({ id, name, car: (car as HTMLElement).innerHTML });
     } else {
       const carContainer = document.createElement('div');
 

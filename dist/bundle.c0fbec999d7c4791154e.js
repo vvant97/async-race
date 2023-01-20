@@ -746,6 +746,11 @@ function renderWinnersTable(params, additionalParams) {
               var item = document.querySelector(".cars__item[data-car-id=\"".concat(id, "\"]"));
               name = item.querySelector('.cars__car-name').textContent;
               car = item.querySelector('.car').cloneNode(true);
+              winnnersSavedData.push({
+                id: id,
+                name: name,
+                car: car.innerHTML
+              });
             } else {
               var carContainer = document.createElement('div');
               carContainer.className = 'car';
