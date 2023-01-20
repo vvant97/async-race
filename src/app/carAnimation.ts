@@ -54,6 +54,8 @@ async function manageCarsButtonsState() {
   const resetButton = document.querySelector('.garage__reset') as HTMLButtonElement;
   const raceButton = resetButton.previousElementSibling as HTMLButtonElement;
   const allStartButtons = document.querySelectorAll('.cars__start');
+  const allSelectsButtons = document.querySelectorAll('.cars__select');
+  const allRemoveButtons = document.querySelectorAll('.cars__remove');
   const generateButton = document.querySelector('.garage__generate') as HTMLButtonElement;
   const createButton = document.querySelector('.garage__submit-create') as HTMLButtonElement;
   const nextPageButton = document.querySelector('.cars__next') as HTMLButtonElement;
@@ -77,6 +79,9 @@ async function manageCarsButtonsState() {
   resetButton.disabled = true;
   raceButton.disabled = false;
   ([...allStartButtons] as HTMLButtonElement[]).forEach((button) => {
+    button.disabled = false;
+  });
+  ([...allSelectsButtons, ...allRemoveButtons] as HTMLButtonElement[]).forEach((button) => {
     button.disabled = false;
   });
 }

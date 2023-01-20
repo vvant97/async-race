@@ -180,6 +180,15 @@ ul {
       text-decoration: underline;
       box-shadow: none;
     }
+
+    &:disabled {
+      background: none;
+      color: #aeaeae;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
   }
 
   &__select {
@@ -192,6 +201,15 @@ ul {
     &:hover {
       text-decoration: underline;
       box-shadow: none;
+    }
+
+    &:disabled {
+      background: none;
+      color: #aeaeae;
+
+      &:hover {
+        text-decoration: none;
+      }
     }
   }
 
