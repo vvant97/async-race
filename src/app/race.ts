@@ -7,6 +7,10 @@ import { togglePreloaderOnElements } from '../utils/utils';
 import getAnimation, { animationsData } from './carAnimation';
 import { currentCarsPage } from './cars';
 
+export const finishedCarsData = {
+  amount: 0,
+};
+
 async function getAllAnimations(mode: RaceMode) {
   const animations: Promise<Animation>[] = [];
   const cars = await getCars({
@@ -72,8 +76,15 @@ function listenRaceEvents() {
                 [QueryKeys.ID]: +animation.id,
                 [QueryKeys.STATUS]: 'drive',
               });
+
+              finishedCarsData.amount += 1;
             } catch (error) {
               animation.pause();
+              finishedCarsData.amount += 1;
+            }
+
+            if (finishedCarsData.amount === animationsArray.length) {
+              resetButton.disabled = false;
             }
           });
 
@@ -87,13 +98,13 @@ function listenRaceEvents() {
           });
 
           raceButton.disabled = true;
-          resetButton.disabled = false;
         });
     }
 
     if (target.classList.contains('garage__reset')) {
       const resetButton = event.target as HTMLButtonElement;
 
+      finishedCarsData.amount = 0;
       togglePreloaderOnElements([resetButton]);
       getAllAnimations('reset');
     }
