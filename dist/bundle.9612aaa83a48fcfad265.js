@@ -496,7 +496,7 @@ function createCarBodyTemplate(color) {
 }
 function createCarTemplate(car) {
   var carBody = createCarBodyTemplate(car.color);
-  var template = "\n    <li class=\"cars__item\" data-car-id=\"".concat(car.id, "\">\n      <div class=\"cars__controls\">\n        <button class=\"button cars__select\">Select</button>\n        <button class=\"button cars__remove\">Remove</button>\n        <h4 class=\"cars__car-name\">").concat(car.name, "</h4>\n      </div>\n      <div class=\"cars__track\">\n        <div class=\"cars__car-container\">\n          <div class=\"cars__state\">\n            <button class=\"button cars__start\">Run</button>\n            <button class=\"button cars__stop\" disabled>Stop</button>\n          </div>\n          ").concat(carBody, "\n        </div>\n      </div>\n    </li>\n  ");
+  var template = "\n    <li class=\"cars__item\" data-car-id=\"".concat(car.id, "\">\n      <div class=\"cars__controls\">\n        <button class=\"button cars__select\">Select</button>\n        <button class=\"button cars__remove\">Remove</button>\n        <h4 class=\"cars__car-name\">").concat(car.name, "</h4>\n      </div>\n      <div class=\"cars__track\">\n        <div class=\"cars__car-container\">\n          <div class=\"cars__state\">\n            <button class=\"button cars__start\">Run</button>\n            <button class=\"button cars__stop\" disabled>Stop</button>\n          </div>\n          ").concat(carBody, "\n        </div>\n        <i class=\"bi bi-flag-fill\"></i>\n      </div>\n    </li>\n  ");
   return template;
 }
 /* harmony default export */ const components_carTemplate = (createCarTemplate);
@@ -1859,10 +1859,10 @@ function getAnimation(id, mode) {
                   if (!animationsData.animations.length) {
                     manageCarsButtonsState();
                   }
-                  animationsData.maxWinners = 0;
                 }
               }
             });
+            animationsData.maxWinners = 0;
           }
           return _context3.abrupt("return", animation);
         case 8:
