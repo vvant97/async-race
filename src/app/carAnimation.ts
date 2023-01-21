@@ -156,11 +156,11 @@ async function getAnimation(id: number, mode: RaceMode): Promise<Animation | und
           if (!animationsData.animations.length) {
             manageCarsButtonsState();
           }
-
-          animationsData.maxWinners = 0;
         }
       }
     });
+
+    animationsData.maxWinners = 0;
   }
 
   return animation;

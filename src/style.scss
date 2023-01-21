@@ -417,3 +417,12 @@ ul {
     font-weight: 500;
   }
 }
+
+i.bi.bi-flag-fill {
+  display: flex;
+  position: absolute;
+  right: 40px;
+  bottom: 0;
+  font-size: 3rem;
+  color: #ff3d3d;
+}
