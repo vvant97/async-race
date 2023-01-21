@@ -1,0 +1,12 @@
+{
+  "extends": ["airbnb-base", "airbnb-typescript/base"],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "error",
+    "no-restricted-syntax": 0,
+    "no-param-reassign": 0
+  },
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "ignorePatterns": ["dist", "webpack.config.js"]
+}

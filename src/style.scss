@@ -1,0 +1,428 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap");
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat", sans-serif;
+}
+
+html {
+  font-size: 10px;
+}
+
+ul {
+  list-style: none;
+}
+
+.container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 30px;
+}
+
+.page-title {
+  margin-bottom: 10px;
+  font-size: 3rem;
+}
+
+.header {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 50px;
+}
+
+.button {
+  padding: 5px 10px;
+  cursor: pointer;
+  width: auto;
+  background: none;
+  border: none;
+  box-shadow: 5px 5px 5px #e2e2e2;
+  color: #000000;
+  font-weight: 300;
+  font-size: 1.2rem;
+  transition: transform 0.3s;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &:disabled {
+    cursor: default;
+    background: #eaeaea;
+
+    &:hover {
+      transform: scale(1);
+    }
+  }
+}
+
+.car {
+  position: relative;
+  top: 11px;
+  transition: all linear;
+}
+
+.garage {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+
+  &.hidden {
+    display: none;
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__create,
+  &__update {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__car-name,
+  &__car-color {
+    height: 30px;
+    border: 1px solid #e6e6e6;
+    outline: none;
+    font-weight: 500;
+
+    &:disabled {
+      background: #eaeaea;
+    }
+  }
+
+  &__car-name {
+    padding: 0 8px;
+  }
+
+  &__cars-controls {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  &__generate {
+    width: auto;
+  }
+}
+
+.cars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 40px;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__state {
+    display: flex;
+    gap: 10px;
+  }
+
+  &__car-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 0 0 5px;
+  }
+
+  &__page-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 40px;
+  }
+
+  &__track {
+    position: relative;
+
+    &:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #838383;
+    }
+  }
+
+  &__remove {
+    padding: 0 3px;
+    background: none;
+    border: none;
+    color: #ff3d3d;
+    box-shadow: none;
+
+    &:hover {
+      text-decoration: underline;
+      box-shadow: none;
+    }
+
+    &:disabled {
+      background: none;
+      color: #aeaeae;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  &__select {
+    padding: 0 3px;
+    background: none;
+    border: none;
+    color: #008fff;
+    box-shadow: none;
+
+    &:hover {
+      text-decoration: underline;
+      box-shadow: none;
+    }
+
+    &:disabled {
+      background: none;
+      color: #aeaeae;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  &__car-name {
+    font-size: 1.4rem;
+    font-weight: 500;
+  }
+
+  &__title {
+    font-size: 2rem;
+  }
+
+  &__amount {
+    padding-left: 5px;
+    color: #008fff;
+  }
+
+  &__subtitle {
+    font-size: 1.6rem;
+  }
+
+  &__page {
+    padding-left: 5px;
+    color: #008fff;
+  }
+}
+
+.winners {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &.hidden {
+    display: none;
+  }
+
+  &__table {
+    max-width: 500px;
+    overflow: scroll;
+    margin: 40px 0;
+    text-align: left;
+
+    thead {
+      background: #008fff;
+      color: #ffffff;
+    }
+
+    th {
+      padding: 10px 10px;
+      font-size: 1.4rem;
+      font-weight: 500;
+      
+      &:nth-of-type(4),
+      &:nth-of-type(5) {
+        cursor: pointer;
+      }
+    }
+
+    td {
+      padding: 5px 10px;
+      font-size: 1.2rem;
+      font-weight: 500;
+      background: #f4f4f482;
+
+      &:nth-of-type(3) {
+        text-align: center;
+      }
+
+      &:last-child {
+        text-align: right;
+      }
+    }
+
+    .car {
+      top: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 5px 10px;
+      background: #f4f4f482;
+
+      &__body {
+        width: 60px;
+        height: 32px;
+      }
+    }
+  }
+
+  &__title {
+    font-size: 2rem;
+  }
+
+  &__amount {
+    padding-left: 5px;
+    color: #008fff;
+  }
+
+  &__subtitle {
+    font-size: 1.6rem;
+  }
+
+  &__page {
+    padding-left: 5px;
+    color: #008fff;
+  }
+
+  .bi {
+    padding-left: 5px;
+    font-size: 1.6rem;
+  }
+
+  &__time-header {
+    width: 128px;
+  }
+
+  &__wins-header {
+    width: 81px;
+  }
+
+  &__number-header {
+    width: 50px;
+  }
+
+  &__name-header {
+    width: 145px;
+  }
+
+  &__page-controls {
+    display: flex;
+    gap: 10px;
+  }
+}
+
+.preloader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  &-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    transform: translate(-50%, -50%);
+  }
+
+  &-ring div {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #0071ff transparent transparent transparent;
+  }
+
+  &-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+  }
+
+  &-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+  }
+
+  &-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+  }
+
+  @keyframes lds-ring {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }  
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.winner {
+  padding: 50px;
+  background-color: #ffffff;
+
+  &__message {
+    font-size: 1.6rem;
+    font-weight: 500;
+  }
+}
+
+i.bi.bi-flag-fill {
+  display: flex;
+  position: absolute;
+  right: 40px;
+  bottom: 0;
+  font-size: 3rem;
+  color: #ff3d3d;
+}
