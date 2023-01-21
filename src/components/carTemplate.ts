@@ -57,6 +57,7 @@ function createCarTemplate(car: CarFullData) {
           </div>
           ${carBody}
         </div>
+        <i class="bi bi-flag-fill"></i>
       </div>
     </li>
   `;
